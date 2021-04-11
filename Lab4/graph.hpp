@@ -12,27 +12,27 @@ struct Node {
 
     int key;
     Node* next;
-    int weigth;
+    int weight;
 
     Node()
         : key(1)
         , next(nullptr) 
-        , weigth(1) {}
+        , weight(1) {}
 
     Node(int key)
         : key(key)
         , next(nullptr) 
-        , weigth(1) {}
+        , weight(1) {}
 
     Node(int key, Node* next) 
         : key(key)
         , next(next) 
-        , weigth(1) {}
+        , weight(1) {}
     
-    Node(int key, int weigth) 
+    Node(int key, int weight) 
         : key(key)
         , next(nullptr)
-        , weigth(weigth) {}
+        , weight(weight) {}
         
 };
 
@@ -48,7 +48,7 @@ class Graph  {
     Graph(int initMatrixSize);
     ~Graph();
 
-    void addEdge(int u, int v, int weigth);          // u - start vertex, v - end vertex
+    void addEdge(int u, int v, int weight);          // u - start vertex, v - end vertex
     void addEdge(int u, int v);
     void removeEdge(int u, int v);
     bool isEdge(int u, int v);
@@ -64,54 +64,56 @@ Graph::Graph()
 Graph::Graph(int initVerticiesNum) {
 
     verticies = new Node[initVerticiesNum];
-
-    for (int i = 0; i < initVerticiesNum; ++i) {
-
-        verticies[i] = *new Node(i + 1);
-    }
-
     numOfVertices = initVerticiesNum;
 }
 
 Graph::~Graph () {
 
-    // for (int i = 0; i < numOfVertices; ++i) {
+    for (int i = 0; i < numOfVertices; ++i) {
+        
+        Node* temp = nullptr;
+        Node* delNode = verticies[i].next;
 
-    //     // delete verticies[i].next;
-    //     delete &verticies[i];
-    // }
+        while (delNode != nullptr) {
+
+            temp = delNode->next;
+            delete delNode;
+            delNode = temp;
+        }
+
+        // delete delNode;
+    }
+
     delete [] verticies;
 }
 
-// void Graph::addEdge(int u, int v, int weigth) {
+void Graph::addEdge(int u, int v, int weight) {
 
-//     int maxValue = max(u, v);
+    int maxValue = max(u, v);
 
-//     if (numOfVertices < maxValue) {
+    if (numOfVertices < maxValue) {
 
-//         Node* newList = new Node[maxValue];
+        Node* newList = new Node[maxValue];
 
-//         for (int i = 0; i < maxValue; i++) {
+        for (int i = 0; i < numOfVertices; ++i) {
 
-//             newList[i] = verticies[i];
-//         }
+            newList[i].next = verticies[i].next;
+        }
 
-//         delete [] verticies;
-        
-//         verticies = newList; 
-//         numOfVertices = maxValue;
-//     }
+        delete [] verticies;
+        verticies = newList; 
+        numOfVertices = maxValue;
+    }
 
-//     Node* vertex = new Node(v, weigth);
-//     Node tempNode = verticies[u - 1];
+    Node* tempNode = &verticies[u - 1];
     
-//     while (tempNode.next != nullptr) {
+    while (tempNode->next != nullptr) {
 
-//         tempNode = *tempNode.next;
-//     }
+        tempNode = tempNode->next;
+    }
 
-//     tempNode.next = vertex;
-// }
+    tempNode->next = new Node(v, weight);
+}
 
 
 void Graph::addEdge(int u, int v) {
@@ -122,19 +124,16 @@ void Graph::addEdge(int u, int v) {
 
         Node* newList = new Node[maxValue];
 
-        for (int i = 0; i < maxValue; i++) {
+        for (int i = 0; i < numOfVertices; ++i) {
 
-            newList[i] = verticies[i];
+            newList[i].next = verticies[i].next;
         }
 
         delete [] verticies;
-        
         verticies = newList; 
         numOfVertices = maxValue;
-        verticies[maxValue - 1] = *new Node(maxValue);
     }
 
-    Node* vertex = new Node(v);
     Node* tempNode = &verticies[u - 1];
     
     while (tempNode->next != nullptr) {
@@ -142,7 +141,7 @@ void Graph::addEdge(int u, int v) {
         tempNode = tempNode->next;
     }
 
-    tempNode->next = vertex;
+    tempNode->next = new Node(v);
 }
 
 // void Graph::removeEdge(int u, int v) {
@@ -168,7 +167,7 @@ void Graph::print()
     for (int i = 0; i < numOfVertices; i++) {
         Node head = verticies[i];
 
-        std::cout << "(" << head.key << ")--";
+        std::cout << "(" << i + 1 << ")--";
 
         while(head.next != nullptr) {
 
