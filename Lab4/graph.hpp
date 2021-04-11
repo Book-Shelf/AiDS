@@ -152,12 +152,16 @@ int Graph::size() {
 
 void Graph::print()
 {
-//    for (int i = 0; i < numOfVertices; i++)
-//    {
-//       for (int j = 0; j < numOfVertices; j++)
-//          std::cout << matrix[i][j] << " ";
-//       std::cout << std::endl;
-//    }
+    for (int i = 0; i < numOfVertices; i++) {
+        Node* head = &verticies[i];
+
+        while(head->next != nullptr) {
+
+            std::cout << "(" << head->key << ") -- ";
+        }
+
+        std::cout << "\bX\n";
+   }
 }
 
 #endif
