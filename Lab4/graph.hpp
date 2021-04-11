@@ -142,13 +142,30 @@ void Graph::addEdge(int u, int v) {
     tempNode->next = new Node(v);
 }
 
-// void Graph::removeEdge(int u, int v) {
+void Graph::removeEdge(int u, int v) {
 
-//     // if (max(u, v) < numOfVertices) {
+    if (max(u, v) <= numOfVertices) {
 
-//     //     matrix[u - 1][v - 1] = 0;
-//     // }
-// }
+        Node* temp = verticies[u - 1].next;
+        Node* previous = &verticies[u - 1];
+
+        while (temp != nullptr) {
+
+            if (temp->key == v) {
+
+                previous->next = temp->next;
+
+                delete temp;
+
+                return ;
+            } else {
+
+                previous = temp;
+                temp = temp->next;
+            }
+        }
+    }
+}
 
 bool Graph::isEdge(int u, int v) {
 
