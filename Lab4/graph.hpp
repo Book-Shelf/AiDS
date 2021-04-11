@@ -12,6 +12,28 @@ struct Node {
 
     int key;
     Node* next;
+    int weigth;
+
+    Node()
+        : key(0)
+        , next(nullptr) 
+        , weigth(1) {}
+
+    Node(int key)
+        : key(key)
+        , next(nullptr) 
+        , weigth(1) {}
+
+    Node(int key, Node* next) 
+        : key(key)
+        , next(next) 
+        , weigth(1) {}
+    
+    Node(int key, int weigth) 
+        : key(key)
+        , next(nullptr)
+        , weigth(weigth) {}
+        
 };
 
 // Adjacency List representation
@@ -51,73 +73,63 @@ Graph::~Graph () {
 
 void Graph::addEdge(int u, int v, int weigth) {
 
-    // int maxValue = max(u, v);
+    int maxValue = max(u, v);
 
-    // if (numOfVertices < maxValue) {
+    if (numOfVertices < maxValue) {
 
-    //     int** newMatrix = new int*[maxValue];
+        Node* newList = new Node[maxValue];
 
-    //     for (int i = 0; i < maxValue; i++) {
+        for (int i = 0; i < maxValue; i++) {
 
-    //         newMatrix[i] = new int[maxValue];
-    //     }
+            newList[i] = verticies[i];
+        }
 
-    //     for (int i = 0; i < maxValue; i++) {
-    //         for (int j = 0; j < maxValue; j++) {
-
-    //             newMatrix[i][j] = numOfVertices > i && numOfVertices > j ? matrix[i][j] : 0;
-    //         }
-
-    //     }
-
-    //     for (int i = 0; i < numOfVertices; i++) {
-
-    //         delete [] matrix[i];
-    //     }
-
-    //     delete [] matrix;
+        delete [] verticies;
         
-    //     matrix = newMatrix; 
-    //     numOfVertices = maxValue;
-    // }
+        verticies = newList; 
+        numOfVertices = maxValue;
+    }
 
-    // matrix[u - 1][v - 1] = weigth;
+    Node* vertex = new Node(v, weigth);
+    Node tempNode = verticies[u - 1];
+    
+    while (tempNode.next != nullptr) {
+
+        tempNode = *tempNode.next;
+    }
+
+    tempNode.next = vertex;
 }
 
 
 void Graph::addEdge(int u, int v) {
 
-    // int maxValue = max(u, v);
+   int maxValue = max(u, v);
 
-    // if (numOfVertices < maxValue) {
+    if (numOfVertices < maxValue) {
 
-    //     int** newMatrix = new int*[maxValue];
+        Node* newList = new Node[maxValue];
 
-    //     for (int i = 0; i < maxValue; i++) {
+        for (int i = 0; i < maxValue; i++) {
 
-    //         newMatrix[i] = new int[maxValue];
-    //     }
+            newList[i] = verticies[i];
+        }
 
-    //     for (int i = 0; i < maxValue; i++) {
-    //         for (int j = 0; j < maxValue; j++) {
-
-    //             newMatrix[i][j] = numOfVertices > i && numOfVertices > j ? matrix[i][j] : 0;
-    //         }
-
-    //     }
-
-    //     for (int i = 0; i < numOfVertices; i++) {
-
-    //         delete [] matrix[i];
-    //     }
-
-    //     delete [] matrix;
+        delete [] verticies;
         
-    //     matrix = newMatrix; 
-    //     numOfVertices = maxValue;
-    // }
+        verticies = newList; 
+        numOfVertices = maxValue;
+    }
 
-    // matrix[u - 1][v - 1] = 1;
+    Node* vertex = new Node(v);
+    Node tempNode = verticies[u - 1];
+    
+    while (tempNode.next != nullptr) {
+
+        tempNode = *tempNode.next;
+    }
+
+    tempNode.next = vertex;
 }
 
 void Graph::removeEdge(int u, int v) {
