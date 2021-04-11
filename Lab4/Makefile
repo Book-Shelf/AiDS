@@ -1,6 +1,6 @@
 CPP := g++
 CPPFLAGS := -std=c++17
-CPPFLAGS += -O2 -march=native
+CPPFLAGS += -O2 -g -march=native
 CPPFLAGS += -Wall -Wextra
 
 
