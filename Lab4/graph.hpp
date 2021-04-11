@@ -80,8 +80,6 @@ Graph::~Graph () {
             delete delNode;
             delNode = temp;
         }
-
-        // delete delNode;
     }
 
     delete [] verticies;
@@ -152,10 +150,22 @@ void Graph::addEdge(int u, int v) {
 //     // }
 // }
 
-// bool Graph::isEdge(int u, int v) {
+bool Graph::isEdge(int u, int v) {
 
-//     // return max(u, v) <= numOfVertices && matrix[u - 1][v - 1] != 0;
-// }
+    if (max(u, v) <= numOfVertices) {
+
+        Node* temp = verticies[u - 1].next;
+
+        while (temp != nullptr) {
+
+            if (temp->key == v) return true;
+
+            temp = temp->next;
+        }
+    }
+
+    return false;
+}
 
 int Graph::size() {
 
