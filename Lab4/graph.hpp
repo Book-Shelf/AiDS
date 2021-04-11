@@ -2,6 +2,8 @@
 #define GRAPH_HPP
 
 #include <iostream>
+#include <list>
+#include <queue>
 
 int max(int a, int b) { 
 
@@ -13,26 +15,31 @@ struct Node {
     int key;
     Node* next;
     int weight;
+    bool visited;
 
     Node()
         : key(1)
         , next(nullptr) 
-        , weight(1) {}
+        , weight(1) 
+        , visited(0) {}
 
     Node(int key)
         : key(key)
         , next(nullptr) 
-        , weight(1) {}
+        , weight(1) 
+        , visited(0) {}
 
     Node(int key, Node* next) 
         : key(key)
         , next(next) 
-        , weight(1) {}
+        , weight(1) 
+        , visited(0) {}
     
     Node(int key, int weight) 
         : key(key)
         , next(nullptr)
-        , weight(weight) {}
+        , weight(weight) 
+        , visited(0) {}
         
 };
 
@@ -54,6 +61,8 @@ class Graph  {
     bool isEdge(int u, int v);
     int size();
     void print();
+    Node* getVerticies();
+    static Graph BFS(Graph graph, int start);              
 
 };
 
@@ -204,6 +213,44 @@ void Graph::print()
 
         std::cout << "X\n";
    }
+}
+
+Node* Graph::getVerticies() {
+
+    return verticies;
+}
+
+//Breadth First Search
+Graph Graph::BFS(Graph graph, int start) {
+    
+    std::queue<int> queue;
+    Graph tree(graph.size());
+    graph.getVerticies()[start - 1].visited = 1;
+    queue.push(start);
+    int poped = 0;
+    Node* temp = nullptr;
+
+    while (!queue.empty()) {
+        
+        poped = queue.front();
+        queue.pop();
+        temp = graph.getVerticies()[start - 1].next;
+
+        while (temp != nullptr) {
+
+            if (graph.getVerticies()[temp->key - 1].visited == 0) {
+                
+                tree.addEdge(poped, temp->key);
+                graph.getVerticies()[temp->key - 1].visited = true;
+                queue.push(temp->key);
+            }
+
+            temp = temp->next;
+        }
+
+    }
+
+    return tree;
 }
 
 #endif
