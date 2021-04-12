@@ -15,31 +15,26 @@ struct Node {
     int key;
     Node* next;
     int weight;
-    bool visited;
 
     Node()
         : key(1)
         , next(nullptr) 
-        , weight(1) 
-        , visited(0) {}
+        , weight(1) {}
 
     Node(int key)
         : key(key)
         , next(nullptr) 
-        , weight(1) 
-        , visited(0) {}
+        , weight(1) {}
 
     Node(int key, Node* next) 
         : key(key)
         , next(next) 
-        , weight(1) 
-        , visited(0) {}
+        , weight(1) {}
     
     Node(int key, int weight) 
         : key(key)
         , next(nullptr)
-        , weight(weight) 
-        , visited(0) {}
+        , weight(weight) {}
         
 };
 
@@ -61,8 +56,8 @@ class Graph  {
     bool isEdge(int u, int v);
     int size();
     void print();
-    Node* getVerticies();
-    static Graph BFS(Graph graph, int start);              
+    Node getVertex(int x);
+    static Graph BFS(Graph& graph, int start);              
 
 };
 
@@ -85,7 +80,7 @@ Graph::~Graph () {
 
         while (delNode != nullptr) {
 
-            temp = delNode->next;
+             temp = delNode->next;
             delete delNode;
             delNode = temp;
         }
@@ -215,42 +210,45 @@ void Graph::print()
    }
 }
 
-Node* Graph::getVerticies() {
+Node Graph::getVertex(int x) {
 
-    return verticies;
+    return verticies[x];
 }
 
 //Breadth First Search
-Graph Graph::BFS(Graph graph, int start) {
+Graph Graph::BFS(Graph& graph, int start) {
     
-    std::queue<int> queue;
+    std::queue<int> queue;  
     Graph tree(graph.size());
-    graph.getVerticies()[start - 1].visited = 1;
+    bool visited[graph.size()] = {0};         // array of visited vertecies
+    int poped = 0;                      // vertex that was removed from the queue
+    visited[start - 1] = 1;
     queue.push(start);
-    int poped = 0;
     Node* temp = nullptr;
 
     while (!queue.empty()) {
         
         poped = queue.front();
         queue.pop();
-        temp = graph.getVerticies()[start - 1].next;
 
-        while (temp != nullptr) {
+        temp = graph.getVertex(poped - 1).next;
 
-            if (graph.getVerticies()[temp->key - 1].visited == 0) {
-                
-                tree.addEdge(poped, temp->key);
-                graph.getVerticies()[temp->key - 1].visited = true;
-                queue.push(temp->key);
-            }
+        while(temp != nullptr) {
+
+            int nodeKey = temp->key;
+            
+            if(visited[nodeKey - 1] == 0){      // Check if it was visited
+
+                queue.push(nodeKey);
+                visited[nodeKey - 1] = 1;
+                tree.addEdge(poped, nodeKey);
+            }        
 
             temp = temp->next;
         }
-
     }
-
-    return tree;
+   
+   return tree;
 }
 
 #endif
