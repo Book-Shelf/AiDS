@@ -15,26 +15,31 @@ struct Node {
     int key;
     Node* next;
     int weight;
+    int dist;                   // distance to the root. Only positive numbers when root is set.
 
     Node()
         : key(1)
         , next(nullptr) 
-        , weight(1) {}
+        , weight(1) 
+        , dist(-1) {}
 
     Node(int key)
         : key(key)
         , next(nullptr) 
-        , weight(1) {}
+        , weight(1) 
+        , dist(-1) {}
 
     Node(int key, Node* next) 
         : key(key)
         , next(next) 
-        , weight(1) {}
+        , weight(1) 
+        , dist(-1) {}
     
     Node(int key, int weight) 
         : key(key)
         , next(nullptr)
-        , weight(weight) {}
+        , weight(weight)
+        , dist(-1) {}
         
 };
 
@@ -45,6 +50,8 @@ class Graph  {
     int numOfVertices;
     int root;                           // when transformed into a tree using BFS
 
+    void setDistance(int vertex, int distance);
+    
     public:
 
     Graph();
@@ -225,6 +232,11 @@ void Graph::setRoot(int roo) {
     root = roo;
 }
 
+void Graph::setDistance(int vertex, int distance) {
+
+    verticies[vertex].dist = distance;
+}
+
 //Breadth First Search
 Graph Graph::BFS(Graph& graph, int start) {
     
@@ -232,9 +244,11 @@ Graph Graph::BFS(Graph& graph, int start) {
     Graph tree(graph.size());
     bool visited[graph.size()] = {0};         // array of visited vertecies
     int poped = 0;                      // vertex that was removed from the queue
+    Node* temp = nullptr;
+
     visited[start - 1] = 1;
     queue.push(start);
-    Node* temp = nullptr;
+    tree.setDistance(start - 1, 0);
 
     while (!queue.empty()) {
         
@@ -252,6 +266,7 @@ Graph Graph::BFS(Graph& graph, int start) {
                 queue.push(nodeKey);
                 visited[nodeKey - 1] = 1;
                 tree.addEdge(poped, nodeKey);
+                tree.setDistance(nodeKey - 1, tree.getVertex(poped -1).dist + 1);
             }        
 
             temp = temp->next;
@@ -318,44 +333,7 @@ std::list<int> Graph::get_Path(int end) {
 
 int Graph::get_hops(int end) {
 
-    std::queue<int> queue;  
-    bool visited[numOfVertices] = {0};         // array of visited vertecies
-    int poped = 0;                      // vertex that was removed from the queue
-    Node* temp = nullptr;               // pointer to next verticies
-    int dist[numOfVertices] = {0};      // argument in given index is a parent vertex
-
-    visited[root - 1] = 1;
-    queue.push(root);
-
-    while (!queue.empty()) {
-        
-        poped = queue.front();
-        queue.pop();
-
-        temp = verticies[poped - 1].next;
-
-        while (temp != nullptr) {
-
-            int nodeKey = temp->key;
-            
-            if (visited[nodeKey - 1] == 0){      // Check if it was visited
-
-
-                visited[nodeKey - 1] = true;
-                dist[nodeKey - 1] = dist[poped - 1] + 1;
-                queue.push(nodeKey);
-            }        
-
-            if (nodeKey == end) {
-
-                return dist[nodeKey - 1];
-            }
-
-            temp = temp->next;
-        }
-    }
-
-    return -1;
+    return end <= numOfVertices ? verticies[end - 1].dist : -1;
 } 
 
 #endif
