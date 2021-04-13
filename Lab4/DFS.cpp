@@ -50,16 +50,6 @@ int main(int argc, char* argv[]) {
     toDot(graph, 1, "graphDFS.dot");
     Graph tree = Graph::DFS(graph);
     toDot(tree, 1, "treeDFS.dot");
-
-    // if (argc > 3) {
-        
-    //     for (int i = 3; i < argc; ++i) {
-
-    //         std::cout << tree.get_hops(atoi(argv[i])) << " ";
-    //     }
-        
-    //     std::cout << '\n';
-    // }
     
     std::stack<int> stack = tree.getDFSOrder();
 
@@ -68,7 +58,7 @@ int main(int argc, char* argv[]) {
         std::cout << stack.top() << " ";
         stack.pop();
     }
-    
+
     std::cout << std::endl;
 
 }
