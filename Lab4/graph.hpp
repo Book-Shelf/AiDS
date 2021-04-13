@@ -77,6 +77,7 @@ class Graph  {
     void setBTime(int vertex, int time);
     void setGTime(int vertex, int time);
     int DFS_Visit(Graph& graph, int vertex, int time, Graph& tree);
+    int DFS_Visit(Graph& graph, int vertex, int time);
     void setParent(int vertex, int parent);
     
     public:
