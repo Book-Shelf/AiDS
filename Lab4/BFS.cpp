@@ -4,9 +4,9 @@
 
 // Function to convert graph into dot format
 // directed := 1(directed)/ 2(undirected)
-void toDot(Graph &graph, bool directed) {
+void toDot(Graph &graph, bool directed, std::string outFile) {
 
-    std::ofstream image("graph.dot");
+    std::ofstream image(outFile);
 
     std::string graphType = directed ? "digraph" : "graph";
     std::string graphConnection = directed ? "->" : "--";
@@ -26,12 +26,11 @@ void toDot(Graph &graph, bool directed) {
     image.close();
 }
 
-
 int main(int argc, char* argv[]) {
 
-    if (argc != 2) {
+    if (argc < 3) {
 
-        std::cerr << "Type path to file";
+        std::cerr << "[path to file] [start vertex] [end vertex01] [end vertex02] ...\n";
         return 1;
     }
 
@@ -48,5 +47,17 @@ int main(int argc, char* argv[]) {
     }
 
     data.close();
-    toDot(graph, 1);
+    toDot(graph, 1, "graph.dot");
+    Graph tree = Graph::BFS(graph, atoi(argv[2]));
+    toDot(tree, 1, "tree.dot");
+
+    if (argc > 3) {
+        
+        for (int i = 3; i < argc; ++i) {
+
+            std::cout << tree.get_hops(atoi(argv[i])) << " ";
+        }
+        
+        std::cout << '\n';
+    }
 }
