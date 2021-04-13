@@ -70,6 +70,7 @@ class Graph  {
     Node* verticies;
     int numOfVertices;
     int root;                           // when transformed into a tree using BFS
+    std::stack<int> verticiesDFS;                     // stack that consists of verticies that has been visited
 
     void setDistance(int vertex, int distance);
     void setColour(int vertex, int colour);
@@ -96,6 +97,7 @@ class Graph  {
     std::list<int> get_Path(int end);           // path from the root to the end vertex
     int get_hops(int end);                // distance between root and end vertex
     static Graph DFS(Graph& graph);
+    std::stack<int> getDFSOrder();
 };
 
 Graph::Graph()
@@ -388,6 +390,11 @@ void Graph::setParent(int vertex, int parent) {
 }
 
 
+std::stack<int> Graph::getDFSOrder() {
+
+    return verticiesDFS;
+}
+
 int Graph::DFS_Visit(Graph& graph, int vertex, int time, Graph& tree) {
 
     time += 1;
@@ -409,6 +416,7 @@ int Graph::DFS_Visit(Graph& graph, int vertex, int time, Graph& tree) {
 
     graph.setColour(vertex, 2);
     time += 1;
+    tree.verticiesDFS.push(vertex);
     graph.setBTime(vertex, time);
 
     return time;
@@ -426,16 +434,13 @@ Graph Graph::DFS(Graph& graph) {
 
     for (int i = 1; i <= graph.size(); ++i) {
 
-        if (graph.getVertex(i).colour == 0) {
+        if (graph.getVertex(i - 1).colour == 0) {
 
             time = graph.DFS_Visit(graph, i, time, tree);
         }
     }
 
-    std::cout << time << '\n';
-
     return tree;
-
 }
 
 #endif
