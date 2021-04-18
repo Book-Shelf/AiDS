@@ -5,9 +5,9 @@ CPPFLAGS += -Wall -Wextra
 
 
 .PHONY: default clean
-default: test.x
+default: Connected.x
 
-test.x: test.cpp graph.hpp
+Connected.x: Connected.cpp graph.hpp
 
 %.x: %.cpp
 	$(CPP) $(CPPFLAGS) $< -o $@
