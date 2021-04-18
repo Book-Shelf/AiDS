@@ -6,7 +6,9 @@ Zaimplementuj algorytm wyszukiwania silnych spójnych składowych grafu.
 
 ## Testowanie rozwiązania
 Napisz program, który z linii poleceń będzie można wywołać w następujący sposób:
-./my_program path_to_graph_file 
+``` bash
+$ ./my_program path_to_graph_file 
+```
 
 Działanie powyższego polecenia powinno:
 + wczytać z pliku path_to_graph_file graf w formacie jak w poprzednim zadaniu
@@ -14,5 +16,7 @@ Działanie powyższego polecenia powinno:
 + Wyświetlić ilość silnie spójnych składowych
 
 Przykładowe działanie algorytmu:
-./my_program graph1 
+```bash
+$ ./my_program graph1 
 4
+```
