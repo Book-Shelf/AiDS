@@ -20,6 +20,8 @@ z użyciem wektora.
 Program powinien realizować funkcjonalność jak poniżej.
 
 1. Pobiera z linii poleceń listę parametrów, będących kolejnymi elementami typu podanego jako pierwszy parametr. Dopuszczalne wartości string/integer np: 
+```bash 
 my_program integer 1 2 3 -4 4 3 1 1  2 [0-255]
-my_program string ala ma kota a kot ma ale (max 5 char in string)
-2. Dodaje parametry programu do obiektu klasy Set i wypisuje zawartość zbioru. Na przykład dla powyższego wynikiem powinno być  1 2 3 -4 4 (niekoniecznie w tej kolejności
+my_program string ala ma kota a kot ma ale #(max 5 char in string)
+```
+2. Dodaje parametry programu do obiektu klasy Set i wypisuje zawartość zbioru. Na przykład dla powyższego wynikiem powinno być  1 2 3 -4 4 (niekoniecznie w tej kolejności)
