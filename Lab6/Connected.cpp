@@ -49,9 +49,7 @@ int main(int argc, char* argv[]) {
 
         data.close();
         toDot(graph, 1, "graph.dot");
-        Graph tGraph = graph.transpose();
-        toDot(tGraph, 1, "transposeGraph.dot");
-        std::list<std::list<int>> c = graph.getSSS(graph);
+        std::list<std::list<int>> c = graph.SCC(graph);
 
         std::cout << c.size() << "\n";
 

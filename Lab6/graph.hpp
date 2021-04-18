@@ -93,7 +93,7 @@ class Graph  {
     std::list<int> DFSVisitTranspose(Graph& graph, int vertex, std::list<int>& list);
     static std::stack<int> DFS(Graph& graph);
     Graph transpose();
-    static std::list<std::list<int>> getSSS(Graph& graph);
+    static std::list<std::list<int>> SCC(Graph& graph);
 
 };
 
@@ -369,7 +369,7 @@ Graph Graph::transpose() {
     return newGraph;
 }
 
-std::list<std::list<int>> Graph::getSSS(Graph& graph) {
+std::list<std::list<int>> Graph::SCC(Graph& graph) {
 
     std::stack<int> stack = Graph::DFS(graph);
     Graph transposedGraph = graph.transpose();
