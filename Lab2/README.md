@@ -14,6 +14,9 @@ Klasa Element powinna być reprezentowana przez klasę pair z biblioteki standar
 
 Napisz program testujący działanie programu, który ma następującą funkcjonalność:
 
-1. Program powinien przyjmować z parametry z linii poleceń w formie par (wartosc,priorytet), np: my_program  '(kota,3)' '(ala,10)' '(ma,5)' 
+1. Program powinien przyjmować z parametry z linii poleceń w formie par (wartosc,priorytet), np: 
+```bash
+$ my_program  '(kota,3)' '(ala,10)' '(ma,5)' 
+```
 2. Program powinien wstawić każdy z elementów do kolejki a następnie ściągać każdy element z kolejki zgodnie z priorytetem i wypisywać go na ekranie. 
 3. Wynik działania dla przykładu z pkt. 1 powinien zatem wyglądać następująca: ala ma kota
