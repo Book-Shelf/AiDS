@@ -49,21 +49,7 @@ int main(int argc, char* argv[]) {
 
         data.close();
         toDot(graph, 1, "graph.dot");
-        std::list<std::list<int>> c = graph.SCC(graph);
+        std::list<std::list<int>> listOfSSC = graph.SCC(graph);
 
-        std::cout << c.size() << "\n";
-
-        for (std::list<int> list : c) {
-            for (int element : list) {
-
-                std::cout << element << "-->";
-            }
-
-            std::cout << "\b\b\b   \n";
-        }
-
-        std::cout << "\n";
-        
-
-
+        std::cout << listOfSSC.size() << "\n";
 }
