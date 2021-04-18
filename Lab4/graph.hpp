@@ -284,7 +284,6 @@ Graph Graph::BFS(Graph& graph, int start) {
         
         poped = queue.front();
         queue.pop();
-
         temp = graph.getVertex(poped - 1).next;
 
         while(temp != nullptr) {
