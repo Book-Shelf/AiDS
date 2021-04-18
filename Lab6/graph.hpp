@@ -93,7 +93,7 @@ class Graph  {
     std::list<int> DFSVisitTranspose(Graph& graph, int vertex, std::list<int>& list);
     static std::stack<int> DFS(Graph& graph);
     Graph transpose();
-    static int getSSS(Graph& graph);
+    static std::list<std::list<int>> getSSS(Graph& graph);
 
 };
 
@@ -369,7 +369,7 @@ Graph Graph::transpose() {
     return newGraph;
 }
 
-int Graph::getSSS(Graph& graph) {
+std::list<std::list<int>> Graph::getSSS(Graph& graph) {
 
     std::stack<int> stack = Graph::DFS(graph);
     Graph transposedGraph = graph.transpose();
@@ -385,15 +385,16 @@ int Graph::getSSS(Graph& graph) {
 
     while (!stack.empty()) {
         
-        if (transposedGraph.getVertex(stack.top()).colour == 0) {
+        if (transposedGraph.getVertex(stack.top() - 1).colour == 0) {
 
             subgraphs.push_back(transposedGraph.DFSVisitTranspose(transposedGraph, stack.top(), verticies));
             sssCount++;
+            verticies.clear();
         }
         stack.pop();
     }
 
-    return sssCount;
+    return subgraphs;
 
 }
 

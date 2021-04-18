@@ -27,6 +27,45 @@ void toDot(Graph &graph, bool directed, std::string outFile) {
 }
 
 
-int main() {
+int main(int argc, char* argv[]) {
+
+    if (argc != 2) {
+
+            std::cerr << "[Type path to file here]\n";
+            return 1;
+        }
+
+        std::string filename = argv[1];
+        std::ifstream data(filename);
+        std::string VEW[3]; // start Vertes, end Vertex, weigth
+        Graph graph;
+
+        while(std::getline(data, VEW[0], ',')) {
+            
+            std::getline(data, VEW[1], ',');
+            std::getline(data, VEW[2]);
+            graph.addEdge(stoi(VEW[0]), stoi(VEW[1]));
+        }
+
+        data.close();
+        toDot(graph, 1, "graph.dot");
+        Graph tGraph = graph.transpose();
+        toDot(tGraph, 1, "transposeGraph.dot");
+        std::list<std::list<int>> c = graph.getSSS(graph);
+
+        std::cout << c.size() << "\n";
+
+        for (std::list<int> list : c) {
+            for (int element : list) {
+
+                std::cout << element << "-->";
+            }
+
+            std::cout << "\b\b\b   \n";
+        }
+
+        std::cout << "\n";
+        
+
 
 }
