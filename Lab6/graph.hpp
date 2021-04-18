@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <list>
-#include <queue>
+#include <vector>
 #include <stack>
 
 int max(int a, int b) { 
@@ -69,9 +69,9 @@ class Graph  {
     private:
     Node* verticies;
     int numOfVertices;
-
-    int DFS_Visit(Graph& graph, int vertex, int time, std::stack<int>& stack);
     
+    int DFS_Visit(Graph& graph, int vertex, int time, std::stack<int>& stack);
+
     public:
 
     Graph();
@@ -90,9 +90,10 @@ class Graph  {
     void setGTime(int vertex, int time);
     void setParent(int vertex, int parent);
     Node getVertex(int x);
+    std::list<int> DFSVisitTranspose(Graph& graph, int vertex, std::list<int>& list);
     static std::stack<int> DFS(Graph& graph);
     Graph transpose();
-    void printSSS(Graph& graph);
+    static int getSSS(Graph& graph);
 
 };
 
@@ -245,12 +246,6 @@ void Graph::print()
    }
 }
 
-Node Graph::getVertex(int x) {
-
-    return verticies[x];
-}
-
-
 void Graph::setDistance(int vertex, int distance) {
 
     verticies[vertex].dist = distance;
@@ -278,6 +273,33 @@ void Graph::setGTime(int vertex, int time) {
 void Graph::setParent(int vertex, int parent) {
 
     verticies[vertex - 1].parent = parent;
+}
+
+Node Graph::getVertex(int x) {
+
+    return verticies[x];
+}
+
+std::list<int> Graph::DFSVisitTranspose(Graph& graph, int vertex, std::list<int>& list) {
+
+    graph.setColour(vertex, 1);
+    Node* temp = graph.getVertex(vertex - 1).next;
+
+    while (temp != nullptr) {
+
+        if (graph.getVertex(temp->key - 1).colour == 0) {
+
+            graph.setParent(temp->key, vertex);
+            DFSVisitTranspose(graph, temp->key, list);
+        }
+
+        temp = temp->next;
+    }
+
+    graph.setColour(vertex, 2);
+    list.push_back(vertex);
+
+    return list;
 }
 
 
@@ -347,7 +369,7 @@ Graph Graph::transpose() {
     return newGraph;
 }
 
-void printSSS(Graph& graph) {
+int Graph::getSSS(Graph& graph) {
 
     std::stack<int> stack = Graph::DFS(graph);
     Graph transposedGraph = graph.transpose();
@@ -355,7 +377,24 @@ void printSSS(Graph& graph) {
     for (int i = 0; i < graph.size(); ++i) {
 
         transposedGraph.setColour(i, 0);
-    } 
+    }
+
+    int sssCount = 0;
+    std::list<int> verticies;
+    std::list<std::list<int>> subgraphs;
+
+    while (!stack.empty()) {
+        
+        if (transposedGraph.getVertex(stack.top()).colour == 0) {
+
+            subgraphs.push_back(transposedGraph.DFSVisitTranspose(transposedGraph, stack.top(), verticies));
+            sssCount++;
+        }
+        stack.pop();
+    }
+
+    return sssCount;
+
 }
 
 #endif
