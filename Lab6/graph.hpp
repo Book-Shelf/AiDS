@@ -70,12 +70,7 @@ class Graph  {
     Node* verticies;
     int numOfVertices;
 
-    void setDistance(int vertex, int distance);
-    void setColour(int vertex, int colour);
-    void setBTime(int vertex, int time);
-    void setGTime(int vertex, int time);
     int DFS_Visit(Graph& graph, int vertex, int time, std::stack<int>& stack);
-    void setParent(int vertex, int parent);
     
     public:
 
@@ -89,9 +84,16 @@ class Graph  {
     bool isEdge(int u, int v);
     int size();
     void print();
+    void setDistance(int vertex, int distance);
+    void setColour(int vertex, int colour);
+    void setBTime(int vertex, int time);
+    void setGTime(int vertex, int time);
+    void setParent(int vertex, int parent);
     Node getVertex(int x);
-    static std::stack<int> topologicalSort(Graph& graph);
+    static std::stack<int> DFS(Graph& graph);
     Graph transpose();
+    void printSSS(Graph& graph);
+
 };
 
 Graph::Graph()
@@ -306,7 +308,7 @@ int Graph::DFS_Visit(Graph& graph, int vertex, int time, std::stack<int>& stack)
 }
 
 
-std::stack<int> Graph::topologicalSort(Graph& graph) {
+std::stack<int> Graph::DFS(Graph& graph) {
 
     for (int i = 1; i <= graph.size(); ++i) {
         graph.setColour(i, 0);
@@ -343,6 +345,17 @@ Graph Graph::transpose() {
     }
 
     return newGraph;
+}
+
+void printSSS(Graph& graph) {
+
+    std::stack<int> stack = Graph::DFS(graph);
+    Graph transposedGraph = graph.transpose();
+
+    for (int i = 0; i < graph.size(); ++i) {
+
+        transposedGraph.setColour(i, 0);
+    } 
 }
 
 #endif
