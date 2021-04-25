@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <stack>
+#include <list>
 
 int max(int a, int b) { 
 
@@ -83,7 +84,12 @@ class Graph  {
     void setGTime(int vertex, int time);
     void setParent(int vertex, int parent);
     Node getVertex(int x);
+    std::list<int> DFSVisitTranspose(Graph& graph, int vertex, std::list<int>& list);
+    static std::stack<int> DFS(Graph& graph);
+    Graph transpose();
+    static std::list<std::list<int>> SCC(Graph& graph);
     static bool hasCycle(Graph& graph);
+    static void printCycles(Graph& graph);
 };
 
 Graph::Graph()
@@ -294,6 +300,29 @@ Node Graph::getVertex(int x) {
 }
 
 
+std::list<int> Graph::DFSVisitTranspose(Graph& graph, int vertex, std::list<int>& list) {
+
+    graph.setColour(vertex, 1);
+    Node* temp = graph.getVertex(vertex - 1).next;
+
+    while (temp != nullptr) {
+
+        if (graph.getVertex(temp->key - 1).colour == 0) {
+
+            graph.setParent(temp->key, vertex);
+            DFSVisitTranspose(graph, temp->key, list);
+        } 
+
+        temp = temp->next;
+    }
+
+    graph.setColour(vertex, 2);
+    list.push_back(vertex);
+
+    return list;
+}
+
+
 int Graph::DFS_Visit(Graph& graph, int vertex, int time, std::stack<int>& stack) {
 
     time += 1;
@@ -321,7 +350,7 @@ int Graph::DFS_Visit(Graph& graph, int vertex, int time, std::stack<int>& stack)
 }
 
 
-bool Graph::hasCycle(Graph& graph) {
+std::stack<int> Graph::DFS(Graph& graph) {
 
     for (int i = 1; i <= graph.size(); ++i) {
         graph.setColour(i, 0);
@@ -338,9 +367,121 @@ bool Graph::hasCycle(Graph& graph) {
         }
     }
 
+    return stack;
+}
+
+
+Graph Graph::transpose() {
+
+    Graph newGraph(numOfVertices);
+    Node* node = nullptr;
+
+    for (int i = 0; i < numOfVertices; i++) {
+
+        node = verticies[i].next;
+
+        while (node != nullptr) {
+
+            newGraph.addEdge(node->key, i + 1);
+            node = node->next;
+        }
+    }
+
+    return newGraph;
+}
+
+
+std::list<std::list<int>> Graph::SCC(Graph& graph) {
+
+    std::stack<int> stack = Graph::DFS(graph);
+    Graph transposedGraph = graph.transpose();
+
+    for (int i = 0; i < graph.size(); ++i) {
+
+        transposedGraph.setColour(i, 0);
+    }
+
+    std::list<int> verticies;
+    std::list<std::list<int>> subgraphs;
+
+    while (!stack.empty()) {
+        
+        if (transposedGraph.getVertex(stack.top() - 1).colour == 0) {
+
+            subgraphs.push_back(transposedGraph.DFSVisitTranspose(transposedGraph, stack.top(), verticies));
+            verticies.clear();
+        }
+
+        stack.pop();
+    }
+
+    return subgraphs;
+
+}
+
+
+bool Graph::hasCycle(Graph& graph) {
+
+    std::list<std::list<int>> sccs = Graph::SCC(graph);
+
+    for (std::list<int> subgraph : sccs) {
+
+        if (subgraph.size() > 2) {
+            
+            return true;
+        } else {
+
+            int vertex = *subgraph.begin() - 1;
+            if (graph.getVertex(vertex).next->key == graph.getVertex(vertex).key) {
+
+                return true;
+            }
+        }
+
+    }
+
     return false;
 }
 
+
+void Graph::printCycles(Graph& graph) {
+
+    std::list<std::list<int>> sccs = Graph::SCC(graph);
+    int i = 0;
+
+    std::cout << "CYKLE: \n";
+
+
+    for (std::list<int> subgraph : sccs) {
+
+        if (subgraph.size() >= 2) {
+
+            i++;
+            std::cout << "[" << i << "]\t";
+
+            for(int element : subgraph) {
+
+                std::cout << "(" << element << ")" << "-->";
+            }
+
+            std::cout << "\b\b\b   \n";
+        } else {
+
+            int vertex = *subgraph.begin();
+            Node* next = graph.getVertex(vertex - 1).next;
+
+            if (next != nullptr && next->key == vertex){
+
+                i++;
+                std::cout << "[" << i << "]\t";
+                std::cout << "(" << vertex << ")" << "-->" << "(" << vertex  << ")\n";
+            }
+        }
+
+    }
+
+    std::cout << "Ilość cykli: " << i << "\n";
+}
 
 
 #endif
