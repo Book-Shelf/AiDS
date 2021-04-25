@@ -58,13 +58,17 @@ class Graph  {
     private:
     Node* verticies;
     int numOfVertices;
+    bool directed;
     
     int DFS_Visit(Graph& graph, int vertex, int time, std::stack<int>& stack);
+    void removeE(int u, int v);
+    void addE(int u, int v, int weight);
 
     public:
 
     Graph();
-    Graph(int initMatrixSize);
+    Graph(int initVerticiesNum, bool dir);
+    Graph(bool directed);
     ~Graph();
 
     void addEdge(int u, int v, int weight);          // u - start vertex, v - end vertex
@@ -79,20 +83,25 @@ class Graph  {
     void setGTime(int vertex, int time);
     void setParent(int vertex, int parent);
     Node getVertex(int x);
-    static std::stack<int> DFS(Graph& graph);
- 
-
+    static bool hasCycle(Graph& graph);
 };
 
 Graph::Graph()
     : verticies(new Node[1])
-    , numOfVertices(1) {}
+    , numOfVertices(1) 
+    , directed(0) {}
 
-Graph::Graph(int initVerticiesNum) {
+Graph::Graph(int initVerticiesNum, bool dir) {
 
     verticies = new Node[initVerticiesNum];
     numOfVertices = initVerticiesNum;
+    directed = dir;
 }
+
+Graph::Graph(bool directed) 
+    : verticies(new Node[1])
+    , numOfVertices(1)
+    , directed(directed) {}
 
 Graph::~Graph () {
 
@@ -112,6 +121,42 @@ Graph::~Graph () {
     delete [] verticies;
 }
 
+void Graph::removeE(int u, int v)  {
+
+    Node* temp = verticies[u - 1].next;
+    Node* previous = &verticies[u - 1];
+
+    while (temp != nullptr) {
+
+        if (temp->key == v) {
+
+            previous->next = temp->next;
+
+            delete temp;
+
+            return ;
+        } else {
+
+            previous = temp;
+            temp = temp->next;
+        }
+    }
+}
+
+
+void Graph::addE(int u, int v, int weight) {
+
+    Node* tempNode = &verticies[u - 1];
+        
+    while (tempNode->next != nullptr) {
+
+        tempNode = tempNode->next;
+    }
+
+    tempNode->next = new Node(v, weight);
+}
+
+
 void Graph::addEdge(int u, int v, int weight) {
 
     int maxValue = max(u, v);
@@ -130,14 +175,12 @@ void Graph::addEdge(int u, int v, int weight) {
         numOfVertices = maxValue;
     }
 
-    Node* tempNode = &verticies[u - 1];
-    
-    while (tempNode->next != nullptr) {
+    addE(u, v, weight);
 
-        tempNode = tempNode->next;
+    if (!directed) {
+
+        addE(v, u, weight);
     }
-
-    tempNode->next = new Node(v, weight);
 }
 
 
@@ -159,38 +202,21 @@ void Graph::addEdge(int u, int v) {
         numOfVertices = maxValue;
     }
 
-    Node* tempNode = &verticies[u - 1];
-    
-    while (tempNode->next != nullptr) {
+    addE(u, v, 1);
 
-        tempNode = tempNode->next;
+    if (!directed) {
+
+        addE(v, u, 1);
     }
-
-    tempNode->next = new Node(v);
 }
 
 void Graph::removeEdge(int u, int v) {
 
     if (max(u, v) <= numOfVertices) {
 
-        Node* temp = verticies[u - 1].next;
-        Node* previous = &verticies[u - 1];
+        removeE(u, v);
 
-        while (temp != nullptr) {
-
-            if (temp->key == v) {
-
-                previous->next = temp->next;
-
-                delete temp;
-
-                return ;
-            } else {
-
-                previous = temp;
-                temp = temp->next;
-            }
-        }
+        if(!directed) removeE(v, u);
     }
 }
 
@@ -295,7 +321,7 @@ int Graph::DFS_Visit(Graph& graph, int vertex, int time, std::stack<int>& stack)
 }
 
 
-std::stack<int> Graph::DFS(Graph& graph) {
+bool Graph::hasCycle(Graph& graph) {
 
     for (int i = 1; i <= graph.size(); ++i) {
         graph.setColour(i, 0);
@@ -312,7 +338,7 @@ std::stack<int> Graph::DFS(Graph& graph) {
         }
     }
 
-    return stack;
+    return false;
 }
 
 
