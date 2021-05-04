@@ -36,6 +36,12 @@ class Heap {
             }
 
         }
+
+        bool compareRootWithChildren(int i) {
+            return (i * 2 + 2 < size_ ) && (array[i].second < array[i * 2 + 1].second
+                || array[i].second < array[i * 2 + 2].second);
+        }
+
         
     public:
 
@@ -77,7 +83,7 @@ class Heap {
 
             if (size_ == capacity) {
 
-                capacity = size_ + (size_ / 2);
+                capacity = size_ + (size_ / 2) + 1;
                 std::pair<T, int>* newArray = new std::pair<T, int>[capacity];
 
 
@@ -104,6 +110,7 @@ class Heap {
             ++size_;
         }
 
+
         std::pair<T, int> pop() {                            
 
             std::pair<T, int> temp = array[0];
@@ -111,8 +118,7 @@ class Heap {
             array[size_ - 1] = std::pair<T, int>();
             --size_;
 
-            for (int i = 0; array[i].second < array[i * 2 + 1].second
-                || array[i].second < array[i * 2 + 2].second;) {
+            for (int i = 0; compareRootWithChildren(i);) {
 
                 if (array[i * 2 + 1].second < array[i * 2 + 2].second) {
 
@@ -129,18 +135,26 @@ class Heap {
 
             return temp;
         }
+
+
         std::pair<T, int> rootElement() {                            
 
             return size_ != 0 ? array[0] : std::pair<T, int>();
         }
+
+
         int size() {                            
 
             return size_;
         }
+
+
         bool empty() {                           
 
             return size_ == 0;
         }
+
+
         bool check() {                           // checks if heap has heap structure 
 
             for (int i = 0; i < size_ / 2; ++i) {
@@ -156,6 +170,7 @@ class Heap {
             return true;
         }
 
+
         void swap(int a, int b) {
 
             std::pair<T, int> temp = array[a];
@@ -163,6 +178,7 @@ class Heap {
             array[a] = array[b];
             array[b] = temp;
         }
+
 
         void printHeap() {
 

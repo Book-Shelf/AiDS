@@ -14,8 +14,8 @@ int max(int a, int b) {
 struct Destination {
     
     double time;
-    unsigned distance1;
-    unsigned distance2;
+    int distance1;
+    int distance2;
 
     Destination(double time, int dist1, int dist2)
     : time(time)
@@ -336,9 +336,9 @@ Destination Graph::Dijkstra(int startV, int endV1, int endV2) {
 
     while (!queue.empty()) {
         
-        vertex = queue.getMinNodePriority();
+        vertex = queue.Pop().first;
         Node* temp = verticies[vertex - 1].next;
-        queue.Pop();
+       
 
         while (temp != nullptr) {
 
@@ -356,6 +356,16 @@ Destination Graph::Dijkstra(int startV, int endV1, int endV2) {
 
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration<double, std::milli>(stop - start);
+
+    if (verticies[endV1 - 1].dist == INT32_MAX) {
+
+        verticies[endV1 - 1].dist = -1;
+    } 
+
+    if (verticies[endV2 - 1].dist == INT32_MAX) {
+
+        verticies[endV2 - 1].dist = -1;
+    }
 
     return Destination(duration.count(), verticies[endV1 - 1].dist, verticies[endV2 - 1].dist);
 }

@@ -6,7 +6,7 @@ CPPFLAGS += -Wall -Wextra
 .PHONY: default clean
 default: dijkstra.x
 
-dijkstra.x: dijkstra.cpp graph.hpp
+dijkstra.x: dijkstra.cpp graph.hpp priorityQueue.hpp heap.hpp
 
 %.x: %.cpp
 	$(CPP) $(CPPFLAGS) $< -o $@
