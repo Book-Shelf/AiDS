@@ -2,6 +2,7 @@
 #define GRAPH_HPP
 
 #include "priorityQueue.hpp"
+#include <chrono>
 
 
 int max(int a, int b) { 
@@ -12,11 +13,11 @@ int max(int a, int b) {
 
 struct Destination {
     
-    unsigned time;
+    double time;
     unsigned distance1;
     unsigned distance2;
 
-    Destination(int time, int dist1, int dist2)
+    Destination(double time, int dist1, int dist2)
     : time(time)
     , distance1(dist1)
     , distance2(dist2) {}
@@ -322,6 +323,7 @@ void Graph::initDistance(int source) {
 
 Destination Graph::Dijkstra(int startV, int endV1, int endV2) {
 
+    auto start = std::chrono::high_resolution_clock::now();
     typedef std::pair<int, int> element;
 
     initDistance(startV);
@@ -352,7 +354,10 @@ Destination Graph::Dijkstra(int startV, int endV1, int endV2) {
         }
     }
 
-    return Destination(0, verticies[endV1 - 1].dist, verticies[endV2 - 1].dist);
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration<double, std::milli>(stop - start);
+
+    return Destination(duration.count(), verticies[endV1 - 1].dist, verticies[endV2 - 1].dist);
 }
 
 #endif
