@@ -4,6 +4,7 @@
 #include "priorityQueue.hpp"
 #include <chrono>
 
+typedef std::pair<int, int> element;
 
 int max(int a, int b) { 
 
@@ -77,6 +78,7 @@ class Graph  {
     void removeE(int u, int v);
     void addE(int u, int v, int weight);
     void initDistance(int source);
+    void relax(PQueue<int>& queue, int vertex, int adjacentVertex, int Weight);
 
     public:
 
@@ -320,16 +322,25 @@ void Graph::initDistance(int source) {
     verticies[source - 1].dist = 0;
 }
 
+void Graph::relax(PQueue<int>& queue, int vertex, int adjacentVertex, int Weight) {
+
+    int distance = verticies[vertex].dist + Weight;
+
+    if (verticies[adjacentVertex].dist > distance) {
+
+        verticies[adjacentVertex].dist = distance;
+        queue.InsertElement(element(adjacentVertex + 1, verticies[adjacentVertex].dist));
+    }
+}
+
 
 Destination Graph::Dijkstra(int startV, int endV1, int endV2) {
 
     auto start = std::chrono::high_resolution_clock::now();
-    typedef std::pair<int, int> element;
 
     initDistance(startV);
-    PQueue<int> queue;                  // pairs of elements (vertex, weight)
+    PQueue<int> queue(size());                  // pairs of elements (vertex, weight)
     int vertex = 0;
-    int distance = 0;
 
     queue.InsertElement(element(startV, 0));
 
@@ -338,18 +349,11 @@ Destination Graph::Dijkstra(int startV, int endV1, int endV2) {
         
         vertex = queue.Pop().first;
         Node* temp = verticies[vertex - 1].next;
-       
+        
 
         while (temp != nullptr) {
 
-            distance = verticies[vertex - 1].dist + temp->weight;
-
-            if (verticies[temp->key - 1].dist > distance) {
-
-                verticies[temp->key - 1].dist = distance;
-                queue.InsertElement(element(temp->key, verticies[temp->key - 1].dist));
-            }
-
+            relax(queue, vertex - 1, temp->key - 1, temp->weight);
             temp = temp->next;
         }
     }

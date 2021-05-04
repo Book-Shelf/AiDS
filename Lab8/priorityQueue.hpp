@@ -20,17 +20,14 @@ class PQueue {
         heap.build(elements);
     }
 
+    PQueue(int size) : heap(size) {}
+
     void InsertElement(element e) {
         heap.push(e);
     }
 
     int getMinPriority(){
         return heap.rootElement().second;
-    }
-
-    // returns first element in pair associated with min priority
-    T getMinNodePriority(){
-        return heap.rootElement().first;
     }
 
     element Pop() {

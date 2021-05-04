@@ -45,7 +45,7 @@ class Heap {
         
     public:
 
-        Heap(unsigned int heapSize) 
+        Heap(int heapSize) 
             : size_(0)
             , capacity(heapSize)
             , array(new std::pair<T, int>[heapSize]) {}
