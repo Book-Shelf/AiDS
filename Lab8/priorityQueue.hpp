@@ -28,6 +28,11 @@ class PQueue {
         return heap.rootElement().second;
     }
 
+    // returns first element in pair associated with min priority
+    T getMinNodePriority(){
+        return heap.rootElement().first;
+    }
+
     element Pop() {
         return heap.pop();
     }
@@ -37,7 +42,7 @@ class PQueue {
         heap.checkAndIncrease(e, priority);
     }
 
-    // prints priorities from top priority to the lowest
+    // prints priorities from the lowest priority to the top
     void printHeap() {
 
         heap.printHeap();
@@ -51,6 +56,11 @@ class PQueue {
     void check() {
 
         std::cout << heap.check() << "\n";
+    }
+
+    bool empty() {
+
+        return heap.empty();
     }
 };
 

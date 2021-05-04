@@ -77,7 +77,7 @@ class Heap {
 
             if (size_ == capacity) {
 
-                capacity = size_ + (size_ / 2)
+                capacity = size_ + (size_ / 2);
                 std::pair<T, int>* newArray = new std::pair<T, int>[capacity];
 
 
