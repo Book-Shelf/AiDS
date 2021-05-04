@@ -8,3 +8,7 @@ Overview of labs:
   2. PriorityQueue
   3. Graph
   4. BFS/DFS
+  5. Topological sort
+  6. Checking for connectivity of a graph
+  7. Searching cycles in a graph
+  8. Dijkstra's algorithm
