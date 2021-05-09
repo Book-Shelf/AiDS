@@ -3,6 +3,15 @@
 
 #include <iostream>
 
+#define INFINTY 10000000
+
+
+int min(int a, int b) {
+
+    return a < b ? a : b;
+}
+
+
 int max(int a, int b) { 
 
     return a < b ? b : a; 
@@ -24,12 +33,13 @@ class Graph  {
     Graph(int initMatrixSize, bool directed);
     ~Graph();
 
-    void addEdge(int u, int v, int weigth);          // u - start vertex, v - end vertex
+    void addEdge(int u, int v, int weight);          // u - start vertex, v - end vertex
     void addEdge(int u, int v);
     void removeEdge(int u, int v);
     bool isEdge(int u, int v);
     int size();
     void print();
+    int** floydWarshall();
 
 };
 
@@ -40,7 +50,7 @@ Graph::Graph()
     , numOfVertices(1) {
 
         matrix[0] = new int[1];
-        matrix[0][0] = 0;
+        matrix[0][0] = INFINTY;
     }
 
 
@@ -50,7 +60,7 @@ Graph::Graph(bool directed)
     , numOfVertices(1) {
 
         matrix[0] = new int[1];
-        matrix[0][0] = 0;
+        matrix[0][0] = INFINTY;
     }
 
 
@@ -67,7 +77,7 @@ Graph::Graph(int initMatrixSize, bool directed) {
     for (int i = 0; i < initMatrixSize; ++i) {
         for (int j = 0; j < initMatrixSize; ++j) {
 
-            matrix[i][j] = 0;
+            matrix[i][j] = INFINTY;
         }
     }
 
@@ -97,7 +107,7 @@ void Graph::createBiggerMatrix(int size) {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
 
-                newMatrix[i][j] = numOfVertices > i && numOfVertices > j ? matrix[i][j] : 0;
+                newMatrix[i][j] = numOfVertices > i && numOfVertices > j ? matrix[i][j] : INFINTY;
             }
 
         }
@@ -114,7 +124,7 @@ void Graph::createBiggerMatrix(int size) {
 }
 
 
-void Graph::addEdge(int u, int v, int weigth) {
+void Graph::addEdge(int u, int v, int weight) {
 
     int maxValue = max(u, v);
 
@@ -125,10 +135,10 @@ void Graph::addEdge(int u, int v, int weigth) {
 
     if (!directed) {
 
-        matrix[v - 1][u - 1] = weigth;
+        matrix[v - 1][u - 1] = weight;
     }
 
-    matrix[u - 1][v - 1] = weigth;
+    matrix[u - 1][v - 1] = weight;
 }
 
 
@@ -155,16 +165,16 @@ void Graph::removeEdge(int u, int v) {
 
         if (!directed) {
 
-            matrix[v - 1][u - 1] = 0;
+            matrix[v - 1][u - 1] = INFINTY;
         }
-
-        matrix[u - 1][v - 1] = 0;
+        
+        matrix[u - 1][v - 1] = INFINTY;
     }
 }
 
 bool Graph::isEdge(int u, int v) {
 
-    return max(u, v) <= numOfVertices && matrix[u - 1][v - 1] != 0;
+    return max(u, v) <= numOfVertices && matrix[u - 1][v - 1] != INFINTY;
 }
 
 int Graph::size() {
@@ -180,6 +190,39 @@ void Graph::print()
          std::cout << matrix[i][j] << " ";
       std::cout << std::endl;
    }
+}
+
+
+int** Graph::floydWarshall() {
+
+    int** distance = new int*[numOfVertices];
+
+    for (int i = 0; i < numOfVertices; ++i) {
+
+        distance[i] = new int[numOfVertices];
+    }
+
+
+    for (int i = 0; i < numOfVertices; ++i) {
+        for (int j = 0; j < numOfVertices; j++) {
+
+            distance[i][j] = matrix[i][j];
+        }
+
+        distance[i][i] = 0; 
+    }
+
+
+    for (int k = 0; k < numOfVertices; k++) {
+        for (int i = 0; i < numOfVertices; i++) {
+            for (int j = 0; j < numOfVertices; j++) {
+
+                distance[i][j] = min(distance[i][j], distance[i][k] + distance[k][j]);
+            }
+        }
+    }
+
+    return distance;
 }
 
 #endif
