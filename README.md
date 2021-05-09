@@ -12,3 +12,4 @@ Overview of labs:
   6. Checking for connectivity of a graph
   7. Searching cycles in a graph
   8. Dijkstra's algorithm
+  9. Floyd-Warshall algorithm
