@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#define INFINTY 10000000
+#define INFINITY 10000000
 
 
 int min(int a, int b) {
@@ -25,6 +25,7 @@ class Graph  {
     int numOfVertices;
 
     void createBiggerMatrix(int size);
+    void initMatrixes(int** dist, int** next);
 
     public:
 
@@ -50,7 +51,7 @@ Graph::Graph()
     , numOfVertices(1) {
 
         matrix[0] = new int[1];
-        matrix[0][0] = INFINTY;
+        matrix[0][0] = INFINITY;
     }
 
 
@@ -60,7 +61,7 @@ Graph::Graph(bool directed)
     , numOfVertices(1) {
 
         matrix[0] = new int[1];
-        matrix[0][0] = INFINTY;
+        matrix[0][0] = INFINITY;
     }
 
 
@@ -77,7 +78,7 @@ Graph::Graph(int initMatrixSize, bool directed) {
     for (int i = 0; i < initMatrixSize; ++i) {
         for (int j = 0; j < initMatrixSize; ++j) {
 
-            matrix[i][j] = INFINTY;
+            matrix[i][j] = INFINITY;
         }
     }
 
@@ -107,7 +108,7 @@ void Graph::createBiggerMatrix(int size) {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
 
-                newMatrix[i][j] = numOfVertices > i && numOfVertices > j ? matrix[i][j] : INFINTY;
+                newMatrix[i][j] = numOfVertices > i && numOfVertices > j ? matrix[i][j] : INFINITY;
             }
 
         }
@@ -165,16 +166,16 @@ void Graph::removeEdge(int u, int v) {
 
         if (!directed) {
 
-            matrix[v - 1][u - 1] = INFINTY;
+            matrix[v - 1][u - 1] = INFINITY;
         }
         
-        matrix[u - 1][v - 1] = INFINTY;
+        matrix[u - 1][v - 1] = INFINITY;
     }
 }
 
 bool Graph::isEdge(int u, int v) {
 
-    return max(u, v) <= numOfVertices && matrix[u - 1][v - 1] != INFINTY;
+    return max(u, v) <= numOfVertices && matrix[u - 1][v - 1] != INFINITY;
 }
 
 int Graph::size() {
@@ -193,24 +194,34 @@ void Graph::print()
 }
 
 
-int** Graph::floydWarshall() {
-
-    int** distance = new int*[numOfVertices];
+void Graph::initMatrixes(int** dist, int** next) {
 
     for (int i = 0; i < numOfVertices; ++i) {
 
-        distance[i] = new int[numOfVertices];
+        dist[i] = new int[numOfVertices];
+        next[i] = new int[numOfVertices];
     }
 
 
     for (int i = 0; i < numOfVertices; ++i) {
         for (int j = 0; j < numOfVertices; j++) {
 
-            distance[i][j] = matrix[i][j];
+            dist[i][j] = matrix[i][j];
+            next[i][j] = -INFINITY;
         }
 
-        distance[i][i] = 0; 
+        dist[i][i] = 0; 
     }
+
+}
+
+
+int** Graph::floydWarshall() {
+
+    int** distance = new int*[numOfVertices];
+    int** next = new int*[numOfVertices];
+
+    initMatrixes(distance, next);
 
 
     for (int k = 0; k < numOfVertices; k++) {
