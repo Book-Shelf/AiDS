@@ -2,6 +2,7 @@
 #define GRAPH_HPP
 
 #include <iostream>
+#include <queue>
 
 #define INFINITY 10000000
 
@@ -23,9 +24,12 @@ class Graph  {
     int** matrix;
     bool directed;
     int numOfVertices;
+    int** distance;     // 2D matrix represent distance between 2 nodes
+    int** next;         // 2D matrix that is used to recreate shortest paths 
 
     void createBiggerMatrix(int size);
-    void initMatrixes(int** dist, int** next);
+    void initMatrixes();
+    void printPathText(int startV, int endV);
 
     public:
 
@@ -41,7 +45,9 @@ class Graph  {
     int size();
     void print();
     int** floydWarshall();
-
+    void printShortestPath(int startV, int endV);
+    void printNextMatrix();
+    void hasNegativeCycle();
 };
 
 
@@ -194,11 +200,14 @@ void Graph::print()
 }
 
 
-void Graph::initMatrixes(int** dist, int** next) {
+void Graph::initMatrixes() {
+
+    distance = new int*[numOfVertices];
+    next = new int*[numOfVertices];
 
     for (int i = 0; i < numOfVertices; ++i) {
 
-        dist[i] = new int[numOfVertices];
+        distance[i] = new int[numOfVertices];
         next[i] = new int[numOfVertices];
     }
 
@@ -206,11 +215,11 @@ void Graph::initMatrixes(int** dist, int** next) {
     for (int i = 0; i < numOfVertices; ++i) {
         for (int j = 0; j < numOfVertices; j++) {
 
-            dist[i][j] = matrix[i][j];
-            next[i][j] = -INFINITY;
+            distance[i][j] = matrix[i][j];
+            next[i][j] = matrix[i][j] != INFINITY ? j : -8;
         }
 
-        dist[i][i] = 0; 
+        distance[i][i] = 0; 
     }
 
 }
@@ -218,22 +227,109 @@ void Graph::initMatrixes(int** dist, int** next) {
 
 int** Graph::floydWarshall() {
 
-    int** distance = new int*[numOfVertices];
-    int** next = new int*[numOfVertices];
-
-    initMatrixes(distance, next);
-
+    initMatrixes();
 
     for (int k = 0; k < numOfVertices; k++) {
         for (int i = 0; i < numOfVertices; i++) {
             for (int j = 0; j < numOfVertices; j++) {
 
-                distance[i][j] = min(distance[i][j], distance[i][k] + distance[k][j]);
+                if (distance[i][j] > distance[i][k] + distance[k][j]) {
+
+                    distance[i][j] = distance[i][k] + distance[k][j];
+                    next[i][j] = next[i][k];
+                }
             }
         }
     }
 
     return distance;
+}
+
+
+void Graph::printPathText(int startV, int endV) {
+
+    std::cout << "Path ( " << startV << "-> " << endV << " ) " << "is affected by negative cycle.\n";
+}
+
+
+void Graph::printShortestPath(int startV, int endV)  {
+
+    std::queue<int> path;
+
+    if(distance[startV - 1][endV - 1] == INFINITY) {
+
+        std::cout << "There is no path between vertex " << startV << " and vertex " << endV << "\n";
+        return;
+    }
+
+    int at = startV - 1;
+    
+
+    for(; at != (endV - 1); at = next[at][endV - 1]) {
+
+        if (at == -1) {
+
+            printPathText(startV, endV);
+            return;
+        }
+        
+        path.push(at);
+    }
+
+    if (next[at][endV - 1] == -1) {
+
+        printPathText(startV, endV);
+        return;
+    }
+
+    path.push(endV - 1);
+
+    std::cout << "Path ( " << startV << "-> " << endV << " ):\n";
+
+    while (!path.empty()) {
+
+        std::cout << (path.front() + 1) << "->";
+        path.pop();
+    }
+
+    std::cout << "\b\b  \n";
+
+}
+
+
+void Graph::printNextMatrix() {
+
+    for (int i = 0; i < numOfVertices; ++i) {
+        for (int j = 0; j < numOfVertices; ++j) {
+            
+            std::cout << next[i][j] << " ";
+        }
+
+        std::cout << "\n";
+    }
+}
+
+
+void Graph::hasNegativeCycle() {
+
+    bool hasNegativeCycle = 0;
+
+    for (int k = 0; k < numOfVertices; k++) {
+        for (int i = 0; i < numOfVertices; i++) {
+            for (int j = 0; j < numOfVertices; j++) {
+
+                if (distance[i][j] > (distance[i][k] + distance[k][j])) {
+
+                    next[i][j] = -1;
+                    hasNegativeCycle = 1;
+                }
+            }
+        }
+    }
+
+
+
+    std::cout << (hasNegativeCycle ? "Yes" : "No") << "\n\n";
 }
 
 #endif
