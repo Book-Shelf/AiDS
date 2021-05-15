@@ -48,6 +48,7 @@ class Graph  {
     void printShortestPath(int startV, int endV);
     void printNextMatrix();
     void hasNegativeCycle();
+    bool** getTransitiveClosure();
 };
 
 
@@ -330,6 +331,38 @@ void Graph::hasNegativeCycle() {
 
 
     std::cout << (hasNegativeCycle ? "Yes" : "No") << "\n\n";
+}
+
+
+bool** Graph::getTransitiveClosure() {
+
+    bool** TCmatrix = new bool*[numOfVertices];
+    
+    for (int i = 0; i < numOfVertices; i++) {
+
+        TCmatrix[i] = new bool[numOfVertices];
+    }
+
+    for (int i = 0; i < numOfVertices; i++) {
+        for (int j = 0; j < numOfVertices; j++) {
+
+            TCmatrix[i][j] = ((matrix[i][j] != INFINITY) || (i == j)) ? 1 : 0;
+        }
+    }
+
+    for (int k = 0; k < numOfVertices; k++) {
+        for (int i = 0; i < numOfVertices; i++) {
+            for (int j = 0; j < numOfVertices; j++) {
+
+                if (TCmatrix[i][j] != (TCmatrix[i][k] && TCmatrix[k][j])) {
+
+                    TCmatrix[i][j] = 1;
+                }
+            }
+        }
+    }
+
+    return TCmatrix;
 }
 
 #endif
