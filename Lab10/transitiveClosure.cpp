@@ -9,7 +9,7 @@ void print2DMatrix(T** matrix, size_t size) {
 
     for (size_t i = 0; i < size; i++) 
         for (size_t j = 0; j < size; j++)
-            std::cout << matrix[i][j] << " \n"[j == (j - 1)];
+            std::cout << matrix[i][j] << " \n"[j == size - 1];
 }
 
 
@@ -50,12 +50,12 @@ int main(int argc, char* argv[]) {
 
     bool** TCmatrix = graph.getTransitiveClosure();
     
-    std::cout << "Matrix: ";
+    std::cout << "Matrix:\n";
     print2DMatrix<bool>(TCmatrix, graph.size());
 
 
     for (int i = 0; i < argc - 2; i++) {
 
-        std::cout << "From " << paths[i].first << "To " << paths[i].second << ":  " << TCmatrix[paths[i].first - 1][paths[i].second - 1] <<  "\n";
+        std::cout << "From " << paths[i].first << " To " << paths[i].second << ":  " << TCmatrix[paths[i].first - 1][paths[i].second - 1] <<  "\n";
     }
 }
