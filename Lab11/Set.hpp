@@ -11,15 +11,29 @@ class Set {
     int _size;
     std::vector<T> set;
 
+
+    typename std::vector<T>::iterator isMember(T x) {
+
+        for (typename std::vector<T>::iterator it = set.begin(); it < set.end(); ++it) {
+
+            if (*it == x) return it;
+        }
+
+        return set.end();
+    }
+
+
     public:
     Set() : _size(0) {}
 
     ~Set() {}
 
+
     int size() {
 
         return _size;
     }
+
 
     void Insert(T value) {
 
@@ -49,16 +63,6 @@ class Set {
     }
 
 
-    typename std::vector<T>::iterator isMember(T x) {
-
-        for (typename std::vector<T>::iterator it = set.begin(); it < set.end(); ++it) {
-
-            if (*it == x) return it;
-        }
-
-        return set.end();
-    }
-
     bool IsMember(T x) {
         
         return isMember(x) != set.end();
@@ -82,6 +86,7 @@ class Set {
         return newSet;
     }
 
+
     static Set<T> Intersection(Set<T> set1, Set<T> set2) {
 
         Set<T> newSet;
@@ -96,6 +101,7 @@ class Set {
         return newSet;
     }
 
+
     static Set<T> Difference(Set<T> set1, Set<T> set2) {
 
         Set<T> newSet;
@@ -109,6 +115,7 @@ class Set {
 
         return newSet;
     }
+
 
     void print() {
 
