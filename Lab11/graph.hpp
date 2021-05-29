@@ -1,7 +1,7 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
 
-#include <iostream>
+#include "Set.hpp"
 
 int max(int a, int b) { 
 
@@ -62,6 +62,9 @@ class Graph  {
     void removeE(int u, int v);
     void addE(int u, int v, int weight);
     void initDistance(int source);
+    Set<int> makeSet(int vertex);
+    Set<int>& findSet(int vertex, std::vector<Set<int>>& sets);
+    void UNION(Set<int>& set1, Set<int>& set2, std::vector<Set<int>>& sets);
 
     public:
 
@@ -82,6 +85,7 @@ class Graph  {
     void setGTime(int vertex, int time);
     void setParent(int vertex, int parent);
     Node getVertex(int x);
+    void MST_Kruskal();
     
 };
 
@@ -153,6 +157,32 @@ void Graph::addE(int u, int v, int weight) {
     }
 
     tempNode->next = new Node(v, weight);
+}
+
+Set<int> Graph::makeSet(int vertex) {
+
+    Set<int> set;
+    set.Insert(vertex);
+
+    return set;
+}
+
+Set<int>& Graph::findSet(int vertex, std::vector<Set<int>>& sets) {
+
+    for (std::vector<Set<int>>::iterator it = sets.begin(); it != sets.end(); ++it) {
+
+        if (it->IsMember(vertex)) 
+            return *it;
+    }
+
+    return *new Set<int>;
+}
+
+void Graph::UNION(Set<int>& set1, Set<int>& set2, std::vector<Set<int>>& sets) {
+
+    set1 = Set<int>::Union(set1, set2);
+    set2 = sets.back();
+    sets.pop_back();
 }
 
 
@@ -293,5 +323,22 @@ Node Graph::getVertex(int x) {
     return verticies[x];
 }
 
+void Graph::MST_Kruskal() {
+
+    std::vector<Set<int>> sets;
+
+    for (int i = 0; i < numOfVertices; i++) 
+        sets.push_back(makeSet(i));
+    
+    Set<int>& fSet = findSet(2,sets);
+    fSet.Insert(1);
+    // std::cout << fSet.size() << "\n";
+    // fSet.print();
+    UNION(findSet(2, sets), findSet(3, sets), sets);
+
+    for (Set<int> set : sets) {
+        set.print();
+    }
+}
 
 #endif
