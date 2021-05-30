@@ -443,11 +443,14 @@ Graph Graph::MST_Kruskal() {
     std::vector<Edge> MSTEdges;
 
     
-    for (int i = 0; i < numOfEdges; i++) {
+    for (int i = 0; i < numOfEdges && sets.size() != 1; i++) {
+
+        int source = sortedEdges.at(i).source;
+        int destination = sortedEdges.at(i).destination;
         
-        if (!findSet(sortedEdges.at(i).source, sets).checkIfIntersect(findSet(sortedEdges.at(i).destination, sets))) {
-            MST.addEdge(sortedEdges.at(i).source, sortedEdges.at(i).destination, sortedEdges.at(i).weight);
-            UNION(findSet(sortedEdges.at(i).source, sets), findSet(sortedEdges.at(i).destination, sets), sets);
+        if (!findSet(source, sets).checkIfIntersect(findSet(destination, sets))) {
+            MST.addEdge(source, destination, sortedEdges.at(i).weight);
+            UNION(findSet(source, sets), findSet(destination, sets), sets);
         }
     }
 
