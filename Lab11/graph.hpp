@@ -308,7 +308,7 @@ void Graph::addEdge(int u, int v, int weight) {
 
     addE(u, v, weight);
 
-    if (!directed) {
+    if (!directed && (v != u)) {
 
         addE(v, u, weight);
     }
@@ -337,7 +337,7 @@ void Graph::addEdge(int u, int v) {
 
     addE(u, v, 1);
 
-    if (!directed) {
+    if (!directed && (v != u)) {
 
         addE(v, u, 1);
     }
@@ -443,7 +443,6 @@ Graph Graph::MST_Kruskal() {
     std::vector<Edge> MSTEdges;
 
     
-
     for (int i = 0; i < numOfEdges; i++) {
         
         if (!findSet(sortedEdges.at(i).source, sets).checkIfIntersect(findSet(sortedEdges.at(i).destination, sets))) {
