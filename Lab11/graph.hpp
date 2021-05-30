@@ -156,7 +156,7 @@ class Graph  {
     void setGTime(int vertex, int time);
     void setParent(int vertex, int parent);
     Node getVertex(int x);
-    void MST_Kruskal();
+    Graph MST_Kruskal();
     
 };
 
@@ -431,33 +431,28 @@ Node Graph::getVertex(int x) {
     return verticies[x];
 }
 
-void Graph::MST_Kruskal() {
+Graph Graph::MST_Kruskal() {
 
     std::vector<Set<int>> sets;
+    Graph MST(numOfVertices, false);
 
     for (int i = 0; i < numOfVertices; i++) 
-        sets.push_back(makeSet(i));
-    
-    Set<int>& fSet = findSet(2,sets);
-    fSet.Insert(1);
-    // std::cout << fSet.size() << "\n";
-    // fSet.print();
-    UNION(findSet(2, sets), findSet(3, sets), sets);
-
-    for (Set<int> set : sets) {
-        set.print();
-    }
+        sets.push_back(makeSet(i + 1));
 
     std::vector<Edge> sortedEdges = sortEdges();
+    std::vector<Edge> MSTEdges;
+
+    
 
     for (int i = 0; i < numOfEdges; i++) {
-
-        std::cout << sortedEdges[i].source << " -> ";
-        std::cout << sortedEdges[i].destination << " = ";
-        std::cout << sortedEdges[i].weight << "\n";
+        
+        if (!findSet(sortedEdges.at(i).source, sets).checkIfIntersect(findSet(sortedEdges.at(i).destination, sets))) {
+            MST.addEdge(sortedEdges.at(i).source, sortedEdges.at(i).destination, sortedEdges.at(i).weight);
+            UNION(findSet(sortedEdges.at(i).source, sets), findSet(sortedEdges.at(i).destination, sets), sets);
+        }
     }
 
-    std::cout << "\n";
+    return MST;
 }
 
 #endif

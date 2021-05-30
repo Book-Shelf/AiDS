@@ -128,6 +128,15 @@ class Set {
         std::cout << (_size != 0 ? "\b\b}\n" : "}\n");
     }
 
+    bool checkIfIntersect(Set<T> set2) {
+
+        for (int i = 0; i < _size; i++) {
+            if(set2.IsMember(set.at(i))) return true;
+        }
+
+        return false;
+    }
+
 };
 
 
