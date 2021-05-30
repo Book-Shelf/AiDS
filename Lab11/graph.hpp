@@ -2,11 +2,15 @@
 #define GRAPH_HPP
 
 #include "Set.hpp"
+#include "stack.h"
+
 
 int max(int a, int b) { 
 
     return a < b ? b : a; 
 }
+
+
 
 
 struct Node {
@@ -52,12 +56,78 @@ struct Node {
         
 };
 
+
+struct Edge {
+
+    int source;
+    int destination;
+    int weight;
+
+    Edge() 
+    : source(-1)
+    , destination(-1)
+    , weight(-1) {}
+
+    Edge(int source, int destination, int weight)
+    : source(source)
+    , destination(destination)
+    , weight(weight) {}
+};
+
+
+void swap(Edge& a, Edge& b) {
+
+    Edge temp = a;
+    a = b;
+    b = temp;
+}
+
+
+void quicksort(std::vector<Edge>& arr){
+    Stack<size_t> leftStack(arr.size());
+    Stack<size_t> rightStack(arr.size());
+    leftStack.push(0);
+    rightStack.push(arr.size() - 1);
+    while (!leftStack.empty()) {
+        int left = leftStack.pop();
+        int right = rightStack.pop();
+        int pivot = arr[(left + right) / 2].weight;
+        int i = left;
+        int j = right;
+        do
+        {
+            while (arr[i].weight < pivot)
+                i++;
+
+            while (arr[j].weight > pivot)
+                j--;
+
+            if (i <= j) {
+                swap(arr[i], arr[j]);
+                i++;
+                j--;
+            }
+        } while (i <= j);
+
+        if (left < j) {
+            leftStack.push(left);
+            rightStack.push(j);
+        }
+        if (right > i) {
+            leftStack.push(i);
+            rightStack.push(right);
+        }
+    }
+}
+
+
 // Adjacency List representation
 class Graph  {
     private:
     Node* verticies;
     int numOfVertices;
     bool directed;
+    int numOfEdges;
     
     void removeE(int u, int v);
     void addE(int u, int v, int weight);
@@ -65,6 +135,7 @@ class Graph  {
     Set<int> makeSet(int vertex);
     Set<int>& findSet(int vertex, std::vector<Set<int>>& sets);
     void UNION(Set<int>& set1, Set<int>& set2, std::vector<Set<int>>& sets);
+    std::vector<Edge> sortEdges();
 
     public:
 
@@ -92,19 +163,22 @@ class Graph  {
 Graph::Graph()
     : verticies(new Node[1])
     , numOfVertices(1) 
-    , directed(0) {}
+    , directed(0) 
+    , numOfEdges(0) {}
 
 Graph::Graph(int initVerticiesNum, bool dir) {
 
     verticies = new Node[initVerticiesNum];
     numOfVertices = initVerticiesNum;
     directed = dir;
+    numOfEdges = 0;
 }
 
 Graph::Graph(bool directed) 
     : verticies(new Node[1])
     , numOfVertices(1)
-    , directed(directed) {}
+    , directed(directed)
+    , numOfEdges(0) {}
 
 Graph::~Graph () {
 
@@ -186,6 +260,34 @@ void Graph::UNION(Set<int>& set1, Set<int>& set2, std::vector<Set<int>>& sets) {
 }
 
 
+std::vector<Edge> Graph::sortEdges() {
+
+    std::vector<Edge> sortedEdges(numOfEdges);
+    int edgeCount = 0;
+    Node* temp = nullptr;
+
+    for (int i = 0; i < numOfVertices; i++) {
+
+        temp = verticies[i].next;
+
+        while (temp != nullptr) {
+
+            if (temp->key >= (i + 1)) {
+
+                sortedEdges.at(edgeCount) = Edge(i + 1, temp->key, temp->weight);
+                edgeCount++;
+            }
+
+            temp = temp->next;
+        }
+    }
+
+    quicksort(sortedEdges);
+
+    return sortedEdges;
+}
+
+
 void Graph::addEdge(int u, int v, int weight) {
 
     int maxValue = max(u, v);
@@ -210,6 +312,8 @@ void Graph::addEdge(int u, int v, int weight) {
 
         addE(v, u, weight);
     }
+
+    numOfEdges++;
 }
 
 
@@ -237,6 +341,8 @@ void Graph::addEdge(int u, int v) {
 
         addE(v, u, 1);
     }
+
+    numOfEdges++;
 }
 
 void Graph::removeEdge(int u, int v) {
@@ -247,6 +353,8 @@ void Graph::removeEdge(int u, int v) {
 
         if(!directed) removeE(v, u);
     }
+
+    numOfEdges--;
 }
 
 bool Graph::isEdge(int u, int v) {
@@ -339,6 +447,17 @@ void Graph::MST_Kruskal() {
     for (Set<int> set : sets) {
         set.print();
     }
+
+    std::vector<Edge> sortedEdges = sortEdges();
+
+    for (int i = 0; i < numOfEdges; i++) {
+
+        std::cout << sortedEdges[i].source << " -> ";
+        std::cout << sortedEdges[i].destination << " = ";
+        std::cout << sortedEdges[i].weight << "\n";
+    }
+
+    std::cout << "\n";
 }
 
 #endif
