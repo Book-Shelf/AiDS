@@ -13,3 +13,4 @@ Overview of labs:
   7. Searching cycles in a graph
   8. Dijkstra's algorithm
   9. Floyd-Warshall algorithm
+  10. Transitive Closure (Floyd-Warshall)
