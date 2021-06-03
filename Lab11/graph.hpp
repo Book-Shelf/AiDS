@@ -2,6 +2,7 @@
 #define GRAPH_HPP
 
 #include "Set.hpp"
+#include "priorityQueue.hpp"
 #include "stack.h"
 
 
@@ -9,8 +10,6 @@ int max(int a, int b) {
 
     return a < b ? b : a; 
 }
-
-
 
 
 struct Node {
@@ -136,6 +135,7 @@ class Graph  {
     Set<int>& findSet(int vertex, std::vector<Set<int>>& sets);
     void UNION(Set<int>& set1, Set<int>& set2, std::vector<Set<int>>& sets);
     std::vector<Edge> sortEdges();
+    void goThroughEdgesAndAddToQueue(PQueue<Edge>& queue, int vertex, Set<int>& set);
 
     public:
 
@@ -157,6 +157,8 @@ class Graph  {
     void setParent(int vertex, int parent);
     Node getVertex(int x);
     Graph MST_Kruskal();
+    int MST_Prim(int startingVertex);
+
     
 };
 
@@ -286,6 +288,18 @@ std::vector<Edge> Graph::sortEdges() {
 
     return sortedEdges;
 }
+
+void Graph::goThroughEdgesAndAddToQueue(PQueue<Edge>& queue, int vertex, Set<int>& set) {
+
+    typedef std::pair<Edge, int> element;
+    Node* temp = verticies[vertex - 1].next;
+
+    while (temp != nullptr && !set.IsMember(temp->key)) {
+
+        queue.InsertElement(element(Edge(vertex, temp->key, temp->weight), temp->weight));
+    }
+}
+
 
 
 void Graph::addEdge(int u, int v, int weight) {
@@ -455,6 +469,59 @@ Graph Graph::MST_Kruskal() {
     }
 
     return MST;
+}
+
+
+int Graph::MST_Prim(int startingVertex) {
+
+    typedef std::pair<Edge, int> element;
+
+    int mstWeight = 0;
+    Graph MST(numOfVertices, false);
+    Set<int> mstVerticies;
+    PQueue<Edge> queue;
+
+    mstVerticies.Insert(startingVertex);
+    Node* temp = verticies[startingVertex - 1].next;
+
+
+    while (temp != nullptr) {
+
+        queue.InsertElement(element(Edge(startingVertex, temp->key, temp->weight), temp->weight));
+        temp = temp->next;
+    }
+
+
+    while (!queue.empty()) {
+
+        queue.printHeap();
+        Edge minE = queue.Pop().first;
+        queue.printHeap();
+
+        if (!mstVerticies.IsMember(minE.destination)) {
+
+            mstVerticies.Insert(minE.destination);
+            mstWeight += minE.weight;
+            MST.addEdge(minE.source, minE.destination, minE.weight);
+
+            temp = verticies[minE.destination - 1].next;
+
+
+            while (temp != nullptr) {
+
+                if (!mstVerticies.IsMember(temp->key)) {
+
+                    queue.InsertElement(element(Edge(minE.destination, temp->key, temp->weight), temp->weight));
+                }
+
+                temp = temp->next;
+            }
+        }
+    }
+
+    MST.print();
+
+    return mstWeight;
 }
 
 #endif
