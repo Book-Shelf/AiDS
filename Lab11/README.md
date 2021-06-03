@@ -3,7 +3,7 @@
 
 Algorytm powinien być zaimplementowany jako szereg metod i zwracać strukturę reprezentującą minimalne drzewo rozpinające. Drzewo to może być reprezentowane jako graf.
 
-# Testowanie rozwiązania
+### Testowanie rozwiązania
 Napisz program, który z linii poleceń będzie można wywołać w następujący sposób:
 ```bash
 my_program path_to_graph_file  starting_vertex 
@@ -22,7 +22,7 @@ Weight of MST: 37.000000
 
 Algorytm powinien być zaimplementowany jako szereg metod i zwracać strukturę reprezentującą minimalne drzewo rozpinające. Drzewo to może być reprezentowane jako graf.
 
-# Testowanie rozwiązania
+### Testowanie rozwiązania
 Napisz program, który z linii poleceń będzie można wywołać w następujący sposób:
 ```bash 
 my_program path_to_graph_file output_file
