@@ -480,10 +480,9 @@ int Graph::MST_Prim(int startingVertex) {
 
     int mstWeight = 0;
     Graph MSTree(numOfVertices, false);
-    Set<int> mstVerticies;
+    Set<int> mstVerticies = makeSet(startingVertex);
     PQueue<Edge> queue;
 
-    mstVerticies.Insert(startingVertex);
     Node* temp = verticies[startingVertex - 1].next;
 
 
@@ -508,8 +507,7 @@ int Graph::MST_Prim(int startingVertex) {
 
 
             while (temp != nullptr) {
-
-                if (!mstVerticies.IsMember(temp->key)) {
+g->key)) {
 
                     queue.InsertElement(element(Edge(minE.destination, temp->key, temp->weight), temp->weight));
                 }
