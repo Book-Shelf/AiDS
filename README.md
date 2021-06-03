@@ -14,3 +14,4 @@ Overview of labs:
   8. Dijkstra's algorithm
   9. Floyd-Warshall algorithm
   10. Transitive Closure (Floyd-Warshall)
+  11. Kruskal/Prim algorithm
