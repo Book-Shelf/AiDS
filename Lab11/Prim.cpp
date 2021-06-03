@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
 
     data.close();
 
-    int weight = graph.MST_Prim(atoi(argv[2]));
+    int mstWeight = graph.MST_Prim(atoi(argv[2]));
 
-    std::cout << "Weight of MST: " << weight << "\n";
+    std::cout << "Weight of MST: " << mstWeight << "\n";
 }

@@ -448,7 +448,8 @@ Node Graph::getVertex(int x) {
 Graph Graph::MST_Kruskal() {
 
     std::vector<Set<int>> sets;
-    Graph MST(numOfVertices, false);
+    int mstWeight = 0;
+    Graph MSTree(numOfVertices, false);
 
     for (int i = 0; i < numOfVertices; i++) 
         sets.push_back(makeSet(i + 1));
@@ -463,12 +464,13 @@ Graph Graph::MST_Kruskal() {
         int destination = sortedEdges.at(i).destination;
         
         if (!findSet(source, sets).checkIfIntersect(findSet(destination, sets))) {
-            MST.addEdge(source, destination, sortedEdges.at(i).weight);
+            MSTree.addEdge(source, destination, sortedEdges.at(i).weight);
+            mstWeight += sortedEdges.at(i).weight;
             UNION(findSet(source, sets), findSet(destination, sets), sets);
         }
     }
 
-    return MST;
+    return MSTree;
 }
 
 
@@ -477,7 +479,7 @@ int Graph::MST_Prim(int startingVertex) {
     typedef std::pair<Edge, int> element;
 
     int mstWeight = 0;
-    Graph MST(numOfVertices, false);
+    Graph MSTree(numOfVertices, false);
     Set<int> mstVerticies;
     PQueue<Edge> queue;
 
@@ -494,15 +496,13 @@ int Graph::MST_Prim(int startingVertex) {
 
     while (!queue.empty()) {
 
-        queue.printHeap();
         Edge minE = queue.Pop().first;
-        queue.printHeap();
 
         if (!mstVerticies.IsMember(minE.destination)) {
 
             mstVerticies.Insert(minE.destination);
             mstWeight += minE.weight;
-            MST.addEdge(minE.source, minE.destination, minE.weight);
+            MSTree.addEdge(minE.source, minE.destination, minE.weight);
 
             temp = verticies[minE.destination - 1].next;
 
@@ -518,8 +518,6 @@ int Graph::MST_Prim(int startingVertex) {
             }
         }
     }
-
-    MST.print();
 
     return mstWeight;
 }
