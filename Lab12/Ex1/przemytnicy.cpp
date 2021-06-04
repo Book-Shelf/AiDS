@@ -1,24 +1,17 @@
 #include <iostream>
 #include <fstream>
 
-
-int main(int argc, char* argv[]) {
-
-    if (argc != 2) {
-        std::cerr << "[entryData.csv]\n";
-        return 1;
-    }
+void readFromFile(std::string filename) {
 
     enum Entry {METAL_TYPE = 0, METAL_PRICE, KNOWN_PROCESSES, TRANSMUTATION_PRICES} entryType; 
 
-    std::string filename = argv[1];
+    entryType = METAL_TYPE;
     std::ifstream data(filename);
     std::string entryData;
     static int rowNumber = 0;
     static int numberOfMetals = -100000;
     static int* metalsPrices;
     static int numberOfKnownProcesses = -100000;
-    entryType = METAL_TYPE;
     static int fromMetal = 0, toMetal = 0, price = 0;
 
 
@@ -71,4 +64,17 @@ int main(int argc, char* argv[]) {
     }
 
     data.close();
+}
+
+int main(int argc, char* argv[]) {
+
+    if (argc != 2) {
+        std::cerr << "[entryData.csv]\n";
+        return 1;
+    }
+
+    std::string filename = argv[1];
+
+    readFromFile(filename);
+   
 }
