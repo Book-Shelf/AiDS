@@ -2,16 +2,19 @@
 #include <fstream>
 #include "graph.hpp"
 
-Graph readFromFile(std::string filename, int& numberOfMetals, int* metalsPrices, int& numberOfKnownProcesses, int& fromMetal, int& toMetal, int& price) {
+int* readFromFile(std::string filename, Graph& transmutationGraph) {
 
     enum Entry {METAL_TYPE = 0, METAL_PRICE, KNOWN_PROCESSES, TRANSMUTATION_PRICES} entryType; 
 
     entryType = METAL_TYPE;
     std::ifstream data(filename);
     std::string entryData;
-    Graph transmutationGraph(true);
 
     int rowNumber = 0;
+    int* metalsPrices = new int[0];
+    int numberOfMetals = -100000;
+    int numberOfKnownProcesses = -100000;
+    int fromMetal = 0, toMetal = 0, price = 0;
 
 
     while(1) {
@@ -64,7 +67,33 @@ Graph readFromFile(std::string filename, int& numberOfMetals, int* metalsPrices,
 
     data.close();
 
-    return transmutationGraph;
+    return metalsPrices;
+}
+
+
+int checkIfTransmutationCycleIsCheaper(int smallestPrice ,int transmutation, int goingBack, int cDuty) {
+
+    int cyclePrice = transmutation + goingBack + cDuty;
+
+    return smallestPrice > cyclePrice ? cyclePrice : smallestPrice;
+}
+
+int calculateMinimumCost(Graph& entryGraph, int* prices) {
+
+    entryGraph.Dijkstra(1);
+    Graph transposedGraph = entryGraph.transpose();
+    transposedGraph.Dijkstra(1);
+    int smallestPrice = prices[0] / 2;
+
+    for (int i = 1; i < entryGraph.size(); i++) {
+
+        smallestPrice = checkIfTransmutationCycleIsCheaper(smallestPrice, 
+                        entryGraph.getVertex(i).dist, 
+                        transposedGraph.getVertex(i).dist, 
+                        prices[i] / 2);
+    }
+
+    return smallestPrice;
 }
 
 int main(int argc, char* argv[]) {
@@ -75,11 +104,9 @@ int main(int argc, char* argv[]) {
     }
 
     std::string filename = argv[1];
-    int numberOfMetals = -100000;
-    int* metalsPrices = new int[0];
-    int numberOfKnownProcesses = -100000;
-    int fromMetal = 0, toMetal = 0, price = 0;
-    Graph transmutationGraph = readFromFile(filename, numberOfMetals, metalsPrices, numberOfKnownProcesses, fromMetal, toMetal, price);
+    Graph transmutationGraph(true); 
+    int* metalsPrices = readFromFile(filename, transmutationGraph);
+    int price = calculateMinimumCost(transmutationGraph, metalsPrices);
 
-    transmutationGraph.print();
+    std::cout << price << "\n";
 }

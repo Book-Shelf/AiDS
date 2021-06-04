@@ -71,6 +71,7 @@ class Graph  {
     void setParent(int vertex, int parent);
     Node getVertex(int x);
     void Dijkstra(int startV);
+    Graph transpose();
     
 };
 
@@ -309,6 +310,26 @@ void Graph::Dijkstra(int startV) {
             temp = temp->next;
         }
     }
+}
+
+
+Graph Graph::transpose() {
+
+    Graph newGraph(numOfVertices);
+    Node* node = nullptr;
+
+    for (int i = 0; i < numOfVertices; i++) {
+
+        node = verticies[i].next;
+
+        while (node != nullptr) {
+
+            newGraph.addEdge(node->key, i + 1, node->weight);
+            node = node->next;
+        }
+    }
+
+    return newGraph;
 }
 
 
