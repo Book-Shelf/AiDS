@@ -29,7 +29,7 @@ int* readFromFile(std::string filename, Graph& transmutationGraph) {
 
                 std::getline(data, entryData, '\n');
                 numberOfMetals = std::stoi(entryData);
-                std::cout << "NumberOfMetals: " << numberOfMetals << "\nTheir prices: {";
+                // std::cout << "NumberOfMetals: " << numberOfMetals << "\nTheir prices: {";
                 metalsPrices = new int[numberOfMetals];
 
                 entryType = METAL_PRICE;
@@ -39,7 +39,7 @@ int* readFromFile(std::string filename, Graph& transmutationGraph) {
 
                 std::getline(data, entryData, '\n');
                 metalsPrices[rowNumber - 2] = std::stoi(entryData);
-                std::cout << metalsPrices[rowNumber - 2] << ", ";
+                // std::cout << metalsPrices[rowNumber - 2] << ", ";
                 if (rowNumber == (numberOfMetals + 1)) entryType = KNOWN_PROCESSES;
                 break;
 
@@ -47,7 +47,7 @@ int* readFromFile(std::string filename, Graph& transmutationGraph) {
 
                 std::getline(data, entryData, '\n');
                 numberOfKnownProcesses = std::stoi(entryData);
-                std::cout << "\b\b}\nKnown number of transmutations: " << numberOfKnownProcesses << "\n";
+                // std::cout << "\b\b}\nKnown number of transmutations: " << numberOfKnownProcesses << "\n";
                 entryType = TRANSMUTATION_PRICES;
                 break;
 
@@ -59,7 +59,7 @@ int* readFromFile(std::string filename, Graph& transmutationGraph) {
                 toMetal = std::stoi(entryData);
                 std::getline(data, entryData, '\n');
                 price = std::stoi(entryData);
-                std::cout << "Transmutation from metal: (" << fromMetal << ") To metal: (" << toMetal << ") Costs: " << price << "\n";
+                // std::cout << "Transmutation from metal: (" << fromMetal << ") To metal: (" << toMetal << ") Costs: " << price << "\n";
                 transmutationGraph.addEdge(fromMetal, toMetal, price);
                 break;
         }
@@ -78,6 +78,7 @@ int checkIfTransmutationCycleIsCheaper(int smallestPrice ,int transmutation, int
     return smallestPrice > cyclePrice ? cyclePrice : smallestPrice;
 }
 
+
 int calculateMinimumCost(Graph& entryGraph, int* prices) {
 
     entryGraph.Dijkstra(1);
@@ -95,6 +96,7 @@ int calculateMinimumCost(Graph& entryGraph, int* prices) {
 
     return smallestPrice;
 }
+
 
 int main(int argc, char* argv[]) {
 
