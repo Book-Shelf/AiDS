@@ -507,7 +507,8 @@ int Graph::MST_Prim(int startingVertex) {
 
 
             while (temp != nullptr) {
-g->key)) {
+
+                if (!mstVerticies.IsMember(temp->key)) {
 
                     queue.InsertElement(element(Edge(minE.destination, temp->key, temp->weight), temp->weight));
                 }
