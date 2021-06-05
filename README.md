@@ -15,3 +15,4 @@ Overview of labs:
   9. Floyd-Warshall algorithm
   10. Transitive Closure (Floyd-Warshall)
   11. Kruskal/Prim algorithm
+  12. "Interesting tasks"
